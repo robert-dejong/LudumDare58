@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "lib",
+    "noImplicitAny": false,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
+    "moduleResolution": "node"
+  },
+  "files": [
+    "src/Main.ts"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "libs/**/*.ts"
+  ],
+  "compileOnSave": true,
+  "buildOnSave": false
+}

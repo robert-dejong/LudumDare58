@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        html,
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .screen {
+            position: relative;
+            display: inline-block;
+            width: 100vh;
+            height: 100vh;
+        }
+
+        .screen.game-screen {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .menu {
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .button {
+            color: #fff;
+            background: #252525;
+            border: 1px solid #fff;
+            padding: 18px 0px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            width: 270px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #707070;
+        }
+
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+        }
+
+        h3 {
+            margin-top: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .screen .button-container {
+            margin-bottom: 15px;
+        }
+
+        .screen .button-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting {
+            width: 350px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        label {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .checkbox-group {
+            float: right;
+        }
+
+        .checkbox {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 600;
+            text-decoration: none;
+            padding-left: 22px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .checkbox:before {
+            content: "";
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin-left: -22px;
+        }
+
+        .checkbox.checked:before {
+            background: #fff;
+        }
+
+        .screen .checkbox:last-child {
+            margin-right: 0;
+        }
+
+        .checkbox.checked:hover:before {
+            background: rgb(170, 170, 170);
+        }
+
+        .checkbox:hover {
+            color: rgb(170, 170, 170);
+        }
+
+        .checkbox:hover:before {
+            border-color: rgb(170, 170, 170);
+        }
+
+        p {
+            text-align: center;
+            max-width: 500px;
+            display: block;
+            margin: 0 auto 30px auto;
+            line-height: 22px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        #instructions .screen {
+            background-image: url(./data/images/instructions.png);
+            background-repeat: no-repeat;
+        }
+
+        #instructions .button-container {
+            text-align: left;
+            margin: 60px 25px;
+        }
+
+        #instructions .button-container .button {
+            text-align: center;
+            background: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mainMenu" class="menu" data-menu="mainmenu">
+        <div class="screen">
+            <div class="center">
+                <h3>Game</h3>
+                <div class="button-container">
+                    <span class="button" onclick="setMenu('game')">Start game</span>
+                </div>
+
+                <div class="button-container">
+                    <span class="button" onclick="setMenu('instructions')">How to play</span>
+                </div>
+
+                <div class="button-container">
+                    <span class="button" onclick="setMenu('settings')">Settings</span>
+                </div>
+
+                <p>
+                    <strong>TIP:</strong> Turn on easy mode in the settings to get
+                    familiar with the mechanics. In easy mode there is no order time
+                    limit and you can't get fired.
+                </p>
+                <p>
+                    <strong>CONTROLS:</strong> Drag-and-drop to add/move ingredients,
+                    press ESC to pause or close dialogue.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="Game" class="menu hidden" data-menu="game">
+        <div class="screen game-screen">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+
+    <div id="instructions" class="menu hidden" data-menu="instructions">
+        <div class="screen">
+            <div class="button-container">
+                <span class="button" onclick="setMenu('mainmenu')">&lt; Back to Main Menu</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings" class="menu hidden" data-menu="settings">
+        <div class="screen">
+            <div class="center">
+                <h3>Settings</h3>
+                <div class="setting">
+                    <label>Difficulty:</label>
+                    <div class="checkbox-group">
+                        <span class="checkbox" onclick="settings.setDifficulty('easy'); updateSetting(event)">Easy</span>
+                        <span class="checkbox checked" onclick="settings.setDifficulty('normal'); updateSetting(event)">Normal</span>
+                    </div>
+                </div>
+
+                <div class="setting">
+                    <label>Sound:</label>
+                    <div class="checkbox-group">
+                        <span class="checkbox checked" onclick="settings.setMuted(false); updateSetting(event)">On</span>
+                        <span class="checkbox" onclick="settings.setMuted(true); updateSetting(event)">Off</span>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <span class="button" onclick="setMenu('mainmenu')">Back to Main Menu</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateSetting(event) {
+            event.target.parentElement.querySelectorAll('.checkbox').forEach(element => element.classList.remove('checked'));
+            event.target.classList.add('checked');
+        }
+
+        function setMenu(menu) {
+            document.querySelectorAll('.menu').forEach(element => element.classList.add('hidden'));
+            document.querySelector(`[data-menu='${menu}']`).classList.remove('hidden');
+            settings.setMenu(menu);
+        }
+    </script>
+</body>
+
+</html>
