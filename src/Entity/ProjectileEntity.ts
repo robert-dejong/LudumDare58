@@ -1,7 +1,7 @@
 import { config } from "../Config";
 import { Entity } from "./Entity";
 import { MobEntity } from "./MobEntity";
-import { VariableMobEntity } from "./Mobs/VariableMobEntity";
+import { VariableMobEntity } from "./VariableMobEntity";
 
 export abstract class ProjectileEntity extends MobEntity {
     private readonly directionX: number;

@@ -2,7 +2,7 @@ import { Task } from "../../libs/Core/Task/Task";
 import { config } from "../Config";
 import { MobEntity } from "../Entity/MobEntity";
 import { HelloWorldMobEntity } from "../Entity/Mobs/HelloWorldMobEntity";
-import { VariableMobEntity } from "../Entity/Mobs/VariableMobEntity";
+import { VariableMobEntity } from "../Entity/VariableMobEntity";
 import { PlayerStats } from "../Entity/Player/PlayerStats";
 import { ILevel } from "../Level/ILevel";
 

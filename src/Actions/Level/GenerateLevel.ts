@@ -2,7 +2,7 @@ import { IAction } from "../../../libs/Core/Action/IAction";
 import { IActionExecutor } from "../../../libs/Core/Action/IActionExecutor";
 import { IActionHandler } from "../../../libs/Core/Action/IActionHandler";
 import { ItemEntity } from "../../Entity/ItemEntity";
-import { TreeEntity } from "../../Entity/Objects/TreeEntity";
+import { NodeModulesMobEntity } from "../../Entity/Mobs/NodeModulesMobEntity";
 import { Player } from "../../Entity/Player/Player";
 import { WoodItem } from "../../Item/WoodItem";
 import { ILevel } from "../../Level/ILevel";
@@ -25,8 +25,9 @@ export class GenerateLevelActionHandler implements IActionHandler<GenerateLevelA
 
         level.add(this.player);
 
-        level.add(new TreeEntity(150, 150));
-        level.add(new TreeEntity(181, 138));
+        const entity1 = new NodeModulesMobEntity();
+        entity1.teleport(100, 100);
+        level.add(entity1)
 
         level.add(new ItemEntity(new WoodItem(1), 30, 77));
         level.add(new ItemEntity(new WoodItem(1), 50, 77));

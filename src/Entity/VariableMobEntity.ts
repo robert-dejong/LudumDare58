@@ -1,10 +1,10 @@
-import { IScreen } from "../../../libs/Core/Screen/IScreen";
-import { Sprite } from "../../../libs/Core/Screen/Sprite";
-import { DamageRamAction } from "../../Actions/Entity/DamageRam";
-import { IncreasePointsAction } from "../../Actions/Entity/IncreasePoints";
-import { IncreaseScoreAction } from "../../Actions/Entity/IncreaseScoreAction";
-import { config } from "../../Config";
-import { MobEntity } from "../MobEntity";
+import { IScreen } from "../../libs/Core/Screen/IScreen";
+import { Sprite } from "../../libs/Core/Screen/Sprite";
+import { DamageRamAction } from "../Actions/Entity/DamageRam";
+import { IncreasePointsAction } from "../Actions/Entity/IncreasePoints";
+import { IncreaseScoreAction } from "../Actions/Entity/IncreaseScoreAction";
+import { config } from "../Config";
+import { MobEntity } from "./MobEntity";
 
 export abstract class VariableMobEntity extends MobEntity {
     private readonly options: VariableMobOptions;
@@ -39,7 +39,7 @@ export abstract class VariableMobEntity extends MobEntity {
 
     public override render(screen: IScreen): void {
         screen.renderRectangle(this.x, this.y, this.getSprite().width, this.getSprite().height, { color: '#f8f8f8', alpha: 0.6 });
-        screen.renderText(this.options.name, this.x + 2, this.y + 6, { fontColor: '#122285', fontSize: 5 })
+        screen.renderText(this.options.name, this.x + 2, this.y + (this.getSprite().height / 2) + 1, { fontColor: '#122285', fontSize: 5 })
 
         const healthSize = (this.healthBarWidth / this.maxHealth) * this.health;
         screen.renderRectangle(this.x + (this.getSprite().width / 2) - (this.healthBarWidth / 2), this.y - 3, this.healthBarWidth, 1, { color: 'red' });

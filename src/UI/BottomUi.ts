@@ -8,7 +8,6 @@ import { config } from "../Config";
 import { PlayerStats } from "../Entity/Player/PlayerStats";
 import { Upgrade } from "../Upgrades/Upgrade";
 import { Upgrades } from "../Upgrades/Upgrades";
-import { UpgradeType } from "../Upgrades/UpgradeType";
 
 export class BottomUi extends UI {
     private selectedUpgrade: Upgrade;
@@ -60,7 +59,7 @@ export class BottomUi extends UI {
         Upgrades.getUpgrades().forEach((upgrade, index) => {
             const xOffset = (this.upgradeOffsetX * index) + (upgrade.isPlaceable ? this.placeableUpgradeOffsetX : 0);
             screen.renderRectangle(79 + xOffset, config.BottomUiBarHeight + 8, 15, 15, { color: '#ffffff', filled: false });
-            screen.render(upgrade.sprite, 81 + xOffset, config.BottomUiBarHeight + 10);
+            screen.render(upgrade.icon, 81 + xOffset, config.BottomUiBarHeight + 10);
         });
 
         // Render hover
@@ -80,7 +79,7 @@ export class BottomUi extends UI {
         }
         
         if (this.draggingUpgrade) {
-            screen.render(this.draggingUpgrade.sprite, this.mouseX, this.mouseY);
+            screen.render(this.draggingUpgrade.icon, this.mouseX, this.mouseY);
         }
     }
 
@@ -138,7 +137,7 @@ export class BottomUi extends UI {
             const xOffset = (this.upgradeOffsetX * index) + (upgrade.isPlaceable ? this.placeableUpgradeOffsetX : 0);
 
             if (this.selectedUpgrade && upgrade.upgradeType === this.selectedUpgrade.upgradeType && !Maths.intersects(upgradePosition.x + xOffset, upgradePosition.y - config.BottomUiBarHeight, upgradePosition.width, upgradePosition.height, x, y, 1, 1)) {
-                if (this.selectedUpgrade.upgradeType === UpgradeType.Cpu) {
+                if (this.selectedUpgrade.isPlaceable) {
                     this.draggingUpgrade = this.selectedUpgrade;
                 }
                 this.selectedUpgrade = undefined;

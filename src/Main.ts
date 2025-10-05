@@ -25,7 +25,7 @@ import { BottomUi } from './UI/BottomUi';
 import { EnemyWaveTask } from './Tasks/EnemyWaveTask';
 import { DamageRamAction, DamageRamActionHandler } from './Actions/Entity/DamageRam';
 import { BuyPlaceableAction, BuyPlaceableActionHandler } from './Actions/Upgrades/BuyPlaceableUpgrade';
-import { ThreadFireProjectileAction, ThreadFireProjectileActionHandler } from './Actions/Entity/ThreadFireProjectile';
+import { WorkerFireProjectileAction, WorkerFireProjectileActionHandler } from './Actions/Entity/WorkerFireProjectile';
 import { IncreasePointsAction, IncreasePointsActionHandler } from './Actions/Entity/IncreasePoints';
 import { IncreaseScoreAction, IncreaseScoreActionHandler } from './Actions/Entity/IncreaseScoreAction';
 
@@ -83,7 +83,7 @@ export class Main {
         this.actionExecutor.register(MouseDragAction.name, () => new MouseDragActionHandler(this.uiManager));
         this.actionExecutor.register(GenerateLevelAction.name, () => new GenerateLevelActionHandler(this.actionExecutor, this.player));
         this.actionExecutor.register(BuyPlaceableAction.name, () => new BuyPlaceableActionHandler(this.playerStats, this.level, this.screen));
-        this.actionExecutor.register(ThreadFireProjectileAction.name, () => new ThreadFireProjectileActionHandler(this.level, this.playerStats));
+        this.actionExecutor.register(WorkerFireProjectileAction.name, () => new WorkerFireProjectileActionHandler(this.level, this.playerStats));
         this.actionExecutor.register(IncreasePointsAction.name, () => new IncreasePointsActionHandler(this.playerStats));
         this.actionExecutor.register(IncreaseScoreAction.name, () => new IncreaseScoreActionHandler(this.playerStats));
     }

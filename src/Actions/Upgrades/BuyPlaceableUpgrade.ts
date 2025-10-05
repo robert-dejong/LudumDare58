@@ -3,10 +3,12 @@ import { IActionHandler } from "../../../libs/Core/Action/IActionHandler";
 import { Unit } from "../../../libs/Core/Action/Unit";
 import { IScreen } from "../../../libs/Core/Screen/IScreen";
 import { config } from "../../Config";
-import { ThreadMobEntity } from "../../Entity/Mobs/ThreadMobEntity";
+import { CpuThreadMobEntity } from "../../Entity/CpuThread/CpuThreadMobEntity";
+import { NpuCoreMobEntity } from "../../Entity/NpuCore/NpuCoreMobEntity";
 import { PlayerStats } from "../../Entity/Player/PlayerStats";
 import { ILevel } from "../../Level/ILevel";
 import { Upgrade } from "../../Upgrades/Upgrade";
+import { UpgradeType } from "../../Upgrades/UpgradeType";
 
 export class BuyPlaceableAction implements IAction {
     constructor(
@@ -22,7 +24,9 @@ export class BuyPlaceableActionHandler implements IActionHandler<BuyPlaceableAct
         private readonly screen: IScreen) { }
 
     public handle(action: BuyPlaceableAction): Unit {
-        const entity = new ThreadMobEntity(action.x, action.y);
+        const entity = action.upgrade.upgradeType == UpgradeType.CpuThread ? 
+            new CpuThreadMobEntity(action.x, action.y) : 
+            new NpuCoreMobEntity(action.x, action.y);
 
         if (action.x < config.leftUiBarWidth) return;
         if (action.y < 0) return;
