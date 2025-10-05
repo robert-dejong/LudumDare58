@@ -8,7 +8,6 @@ import { ILevel } from './Level/ILevel';
 import { settings } from '../libs/Core/Settings/Settings';
 import { ITaskManager } from '../libs/Core/Task/ITaskManager';
 import { createTaskManager } from '../libs/Core/Task/TaskManager';
-import { TestTask } from './Tasks/TestTask';
 import { IActionExecutor } from '../libs/Core/Action/IActionExecutor';
 import { createActionExecutor } from '../libs/Core/Action/ActionExecutor';
 import { MoveMobEntityAction, MoveMobEntityActionHandler } from './Actions/Entity/MoveMobEntity';
@@ -23,6 +22,12 @@ import { GenerateLevelAction, GenerateLevelActionHandler } from './Actions/Level
 import { PlayerStats } from './Entity/Player/PlayerStats';
 import { UITypes } from './UITypes';
 import { BottomUi } from './UI/BottomUi';
+import { EnemyWaveTask } from './Tasks/EnemyWaveTask';
+import { DamageRamAction, DamageRamActionHandler } from './Actions/Entity/DamageRam';
+import { BuyPlaceableAction, BuyPlaceableActionHandler } from './Actions/Upgrades/BuyPlaceableUpgrade';
+import { ThreadFireProjectileAction, ThreadFireProjectileActionHandler } from './Actions/Entity/ThreadFireProjectile';
+import { IncreasePointsAction, IncreasePointsActionHandler } from './Actions/Entity/IncreasePoints';
+import { IncreaseScoreAction, IncreaseScoreActionHandler } from './Actions/Entity/IncreaseScoreAction';
 
 globalThis.settings = settings;
 
@@ -58,7 +63,7 @@ export class Main {
 
         this.level = this.actionExecutor.execute<ILevel>(new GenerateLevelAction(128, 128));
 
-        this.taskManager.add(new TestTask(120));
+        this.taskManager.add(new EnemyWaveTask(this.level, this.playerStats));
 
         this.screen.setSize(config.screenWidth, config.screenHeight);
 
@@ -71,11 +76,16 @@ export class Main {
 
     private registerActions(): void {
         this.actionExecutor.register(MoveMobEntityAction.name, () => new MoveMobEntityActionHandler(this.level));
+        this.actionExecutor.register(DamageRamAction.name, () => new DamageRamActionHandler(this.playerStats));
         this.actionExecutor.register(RenderLevelAction.name, () => new RenderLevelActionHandler(this.level, this.screen));
         this.actionExecutor.register(MouseClickAction.name, () => new MouseClickActionHandler(this.uiManager));
         this.actionExecutor.register(MouseMoveAction.name, () => new MouseMoveActionHandler(this.uiManager));
         this.actionExecutor.register(MouseDragAction.name, () => new MouseDragActionHandler(this.uiManager));
         this.actionExecutor.register(GenerateLevelAction.name, () => new GenerateLevelActionHandler(this.actionExecutor, this.player));
+        this.actionExecutor.register(BuyPlaceableAction.name, () => new BuyPlaceableActionHandler(this.playerStats, this.level, this.screen));
+        this.actionExecutor.register(ThreadFireProjectileAction.name, () => new ThreadFireProjectileActionHandler(this.level, this.playerStats));
+        this.actionExecutor.register(IncreasePointsAction.name, () => new IncreasePointsActionHandler(this.playerStats));
+        this.actionExecutor.register(IncreaseScoreAction.name, () => new IncreaseScoreActionHandler(this.playerStats));
     }
 
     private addInputListeners(): void {
@@ -86,7 +96,7 @@ export class Main {
     }
 
     private addUI(): void {
-        this.uiManager.add(UITypes.Bottom, new BottomUi(this.playerStats));
+        this.uiManager.add(UITypes.Bottom, new BottomUi(this.playerStats, this.actionExecutor));
         this.uiManager.toggle(UITypes.Bottom);
     }
     

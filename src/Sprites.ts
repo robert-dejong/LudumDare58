@@ -10,9 +10,13 @@ export class Sprites {
     public static readonly wood = loadImage('wood.png');
 
     public static readonly ram = loadImage('ram.png');
-    public static readonly cpuIcon = loadImage('cpu.png');
-    public static readonly threadsIcon = loadImage('threads.png');
+    public static readonly cpuIcon = loadImage('cpu_icon.png');
+    public static readonly threadsIcon = loadImage('threads_icon.png');
     public static readonly ramIcon = loadImage('ram_icon.png');
+    public static readonly npuIcon = loadImage('npu_icon.png');
+    public static readonly overclockIcon = loadImage('overclock_icon.png');
+
+    public static readonly threadProjectile = loadImage('thread_projectile.png');
 }
 
 function loadImage(image: string): Sprite {

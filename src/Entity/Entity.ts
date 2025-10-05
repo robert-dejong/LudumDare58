@@ -2,7 +2,6 @@ import { IAction } from "../../libs/Core/Action/IAction";
 import { IActionExecutor } from "../../libs/Core/Action/IActionExecutor";
 import { IScreen } from "../../libs/Core/Screen/IScreen";
 import { Sprite } from "../../libs/Core/Screen/Sprite";
-import { Sounds } from "../Sounds";
 
 export abstract class Entity {
     public x: number;
@@ -32,9 +31,8 @@ export abstract class Entity {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onCollide(_entity: Entity): void {
-        console.log('touching with entity');
-        Sounds.test.play();
+    public onCollide(entity: Entity): void {
+
     }
 
     protected executeAction<T>(action: IAction): T {

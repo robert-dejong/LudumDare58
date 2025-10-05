@@ -9,4 +9,9 @@ export const config = {
     screenHeight: screenHeight,
     leftUiBarWidth: 15,
     BottomUiBarHeight: (screenHeight / renderScale) - 25,
+    threadDamageModifierPerLevelPercentage: 25,
+    threadSpeedModifierPerLevelPercentage: 10,
+    memoryIncreasePerLevel: 10,
+    getThreadDamageModifier: (level: number) => (config.threadDamageModifierPerLevelPercentage / 100) * level + 1,
+    getThreadSpeedModifier: (level: number) => (config.threadSpeedModifierPerLevelPercentage / 100) * level + 1,
 }

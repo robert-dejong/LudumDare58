@@ -35,9 +35,9 @@ class UIManager implements IUIManager {
 
             ui.reset();
             
-            if (Maths.intersects(x, y, 0, 0, position.x, position.y, position.width, position.height)) {
+            //if (Maths.intersects(x, y, 0, 0, position.x, position.y, position.width, position.height)) {
                 ui.click(x - position.x, y - position.y);
-            }
+            //}
         })
     }
 

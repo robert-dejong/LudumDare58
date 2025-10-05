@@ -5,6 +5,7 @@ import { Direction } from "../../../libs/Core/Util/Direction";
 import { Maths } from "../../../libs/Core/Util/Maths";
 import { config } from "../../Config";
 import { MobEntity } from "../../Entity/MobEntity";
+import { Player } from "../../Entity/Player/Player";
 import { ILevel } from "../../Level/ILevel";
 
 export class MoveMobEntityAction implements IAction {
@@ -50,16 +51,19 @@ export class MoveMobEntityActionHandler implements IActionHandler<MoveMobEntityA
     }
 
     private canMove(target: MobEntity, moveX: number, moveY: number): boolean {
+        const isPlayer = target instanceof Player;
         const entities = this.level.getEntities();
         let canMove = true;
 
         const newX = target.x + moveX;
         const newY = target.y + moveY;
 
-        if (newX <= config.leftUiBarWidth) return false;
-        if (newY < 0) return false;
-        if (newX + target.getSprite().width > config.screenWidth / config.renderScale) return false;
-        if (newY + target.getSprite().height >= config.BottomUiBarHeight) return false;
+        if (isPlayer) {
+            if (newX <= config.leftUiBarWidth) return false;
+            if (newY < 0) return false;
+            if (newX + target.getSprite().width > config.screenWidth / config.renderScale) return false;
+            if (newY + target.getSprite().height >= config.BottomUiBarHeight) return false;
+        }
 
         for(const entity of entities) {
             if (entity === target) continue;
@@ -73,7 +77,7 @@ export class MoveMobEntityActionHandler implements IActionHandler<MoveMobEntityA
             target.onCollide(entity);
             entity.onCollide(target);
 
-            if (!entity.canPass()) {
+            if (!entity.canPass() && isPlayer) {
                 canMove = false;
             }
         }

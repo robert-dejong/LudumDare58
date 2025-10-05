@@ -1,5 +1,6 @@
 export enum UpgradeType {
+    CpuOverclock,
     Cpu,
-    Threads,
-    Ram
+    Ram,
+    Npu,
 }

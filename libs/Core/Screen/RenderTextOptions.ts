@@ -3,4 +3,6 @@ export class RenderTextOptions {
     public readonly fontColor?: string = '#ffffff';
     public readonly fontWeight?: number = 400;
     public readonly maxWidth?: number = undefined;
+    public readonly width?: number = undefined;
+    public readonly textCenter?: boolean = false;
 }

@@ -17,10 +17,19 @@ export abstract class MobEntity extends Entity {
     }
 
     public override canPass(): boolean {
-        return false;
+        return true;
+    }
+
+    public teleport(x: number, y: number): void {
+        this.x = x;
+        this.y = y;
     }
 
     protected move(moveX: number, moveY: number): void {
         this.executeAction(new MoveMobEntityAction(this, moveX, moveY));
+    }
+
+    public getSpeed() {
+        return this.speed;
     }
 }

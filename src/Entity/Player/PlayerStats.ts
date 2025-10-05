@@ -1,21 +1,26 @@
+import { config } from "../../Config";
+import { Upgrade } from "../../Upgrades/Upgrade";
 import { UpgradeType } from "../../Upgrades/UpgradeType";
 
 export class PlayerStats {
-    private maxHealth = 100;
-    private health = 100;
-    private score = 0;
-    private points = 0;
+    private maxHealth: number;
+    private health: number;
+    private score: number;
+    private points: number;
+    private wave: number;
     private upgradeLevels: Record<UpgradeType, number>;
 
     public initialize() {
         this.maxHealth = 100;
         this.health = 100;
         this.score = 0;
-        this.points = 0;
+        this.points = 100000; // TODO: 0
+        this.wave = 0;
         this.upgradeLevels = {
+            [UpgradeType.CpuOverclock]: 1,
             [UpgradeType.Cpu]: 1,
-            [UpgradeType.Threads]: 1,
             [UpgradeType.Ram]: 1,
+            [UpgradeType.Npu]: 1,
         };
     }
 
@@ -39,9 +44,28 @@ export class PlayerStats {
         return this.maxHealth;
     }
 
-    public increaseUpgradeLevel(upgradeType: UpgradeType): void {
-        const level = this.upgradeLevels[upgradeType] + 1;
-        this.upgradeLevels[upgradeType] = level;
+    public canBuyUpgrade(upgrade: Upgrade): boolean {
+        const level = this.upgradeLevels[upgrade.upgradeType];
+        const cost = upgrade.cost(level);
+
+        return this.points >= cost;
+    }
+
+    public buyUpgrade(upgrade: Upgrade): boolean {
+        if (!this.canBuyUpgrade(upgrade)) return false;
+        
+        const level = this.upgradeLevels[upgrade.upgradeType];
+        const cost = upgrade.cost(level);
+        
+        this.removePoints(cost);
+        this.upgradeLevels[upgrade.upgradeType] = level + 1;
+        // TODO: Upgrades - play sound to let player know
+
+        if (upgrade.upgradeType === UpgradeType.Ram) {
+            this.maxHealth += config.memoryIncreasePerLevel;
+            this.health += config.memoryIncreasePerLevel;
+        }
+        return true;
     }
 
     public getUpgradeLevel(upgradeType: UpgradeType): number {
@@ -70,5 +94,13 @@ export class PlayerStats {
 
     public getPoints(): number {
         return this.points;
+    }
+
+    public increaseWave() {
+        this.wave++;
+    }
+
+    public getWave(): number {
+        return this.wave;
     }
 }

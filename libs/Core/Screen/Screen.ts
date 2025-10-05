@@ -43,6 +43,12 @@ class Screen implements IScreen {
         this.context.fillStyle = options.fontColor;
         this.context.font = `${options.fontWeight} ${options.fontSize}px Arial`;
         
+        if (options.width && options.textCenter) {
+            const textWidth = this.context.measureText(text).width;
+            this.context.fillText(text, x + (options.width - textWidth) / 2, y);
+            return;
+        }
+
         if (!options.maxWidth) {
             this.context.fillText(text, x, y);
             return;
