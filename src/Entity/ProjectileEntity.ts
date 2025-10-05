@@ -7,6 +7,8 @@ export abstract class ProjectileEntity extends MobEntity {
     private readonly directionX: number;
     private readonly directionY: number;
     
+    protected destroyOnCollide = true;
+
     private damage: number;
 
     constructor(x: number, y: number, directionX: number, directionY: number, speed: number, damage: number, speedModifier: number, damageModifier: number) {
@@ -15,6 +17,7 @@ export abstract class ProjectileEntity extends MobEntity {
         this.speed = speed * speedModifier;
         this.directionX = directionX;
         this.directionY = directionY;
+        this.renderOrder = 9;
     }
 
     public override tick() {
@@ -37,6 +40,15 @@ export abstract class ProjectileEntity extends MobEntity {
         const variableMobEntity = entity as VariableMobEntity;
 
         variableMobEntity.dealDamage(this.damage);
-        this.removed = true;
+
+        if (this.destroyOnCollide) {
+            this.removed = true;
+        } else {
+            this.damage *= 0.5;
+
+            if (this.damage < 1) {
+                this.removed = true;
+            }
+        }
     }
 }

@@ -5,4 +5,5 @@ export interface ITaskManager {
 	remove(name: string): void;
 	add(task: Task): void;
 	reset(): void;
+	clear(): void;
 }

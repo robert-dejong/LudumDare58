@@ -18,7 +18,7 @@ export class ClearLevelActionHandler implements IActionHandler<ClearLevelAction>
         const mobEntities = this.level.getEntities().filter(this.isVariableMobEntity);
 
         for(const entity of mobEntities) {
-            entity.removed = true;
+            entity.dealDamage(Number.MAX_VALUE);
         }
         
         return Unit.value;

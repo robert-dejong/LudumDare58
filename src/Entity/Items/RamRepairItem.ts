@@ -7,10 +7,14 @@ export class RamRepairItem extends ItemEntity {
 
     public pickup(playerStats: PlayerStats) {
         this.removed = true;
-        playerStats.addHealth(5);
+        playerStats.addHealth(10);
     }
 
     public getSprite(): Sprite {
         return Sprites.ramIcon;
+    }
+
+    public getEffectSprite(): Sprite {
+        return Sprites.itemPlusIcon;
     }
 }

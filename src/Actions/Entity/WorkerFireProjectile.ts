@@ -28,7 +28,7 @@ export class WorkerFireProjectileActionHandler implements IActionHandler<WorkerF
             action.worker.attackDelay - (level * 20) : 
             action.worker.attackDelay;
 
-        if (attackDelay < 30) attackDelay = 30;
+        if (attackDelay < 10) attackDelay = 10;
 
         if (action.worker.timeSinceLastAttack < attackDelay) {
             action.worker.timeSinceLastAttack++;
@@ -50,8 +50,8 @@ export class WorkerFireProjectileActionHandler implements IActionHandler<WorkerF
 
         if (action.worker.workerType === 'cpu') {
             const cpuLevel = this.playerStats.getUpgradeLevel(UpgradeType.CpuOverclock);
-            const speedModifier = config.getCpuThreadSpeedModifier(cpuLevel);
-            const damageModifier = config.getCpuThreadDamageModifier(cpuLevel);
+            const speedModifier = config.getCpuThreadModifier(cpuLevel);
+            const damageModifier = config.getCpuThreadModifier(cpuLevel);
             const projectile = new CpuThreadProjectileEntity(x, y, directionX, directionY, speedModifier, damageModifier);
             this.level.add(projectile);
         } else if (action.worker.workerType === 'npu') {

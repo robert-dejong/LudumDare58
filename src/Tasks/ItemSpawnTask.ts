@@ -6,7 +6,7 @@ import { RamRepairItem } from "../Entity/Items/RamRepairItem";
 import { RestartItem } from "../Entity/Items/RestartItem";
 import { ILevel } from "../Level/ILevel";
 
-const baseItemSpawnRateInSeconds = 15;
+const baseItemSpawnRateInSeconds = 25;
 const randomItemSpawnRateInSeconds = 15;
 
 type ItemSpawn = (x: number, y: number) => ItemEntity;
@@ -21,7 +21,7 @@ const rareItemSpawns: ItemSpawn[] = [
 ];
 
 export class ItemSpawnTask extends Task {
-    private spawnItemInSeconds = 10;
+    private spawnItemInSeconds = 20;
 
     constructor(private readonly level: ILevel) {
         super(60, true, 'item-spawns');
@@ -40,7 +40,7 @@ export class ItemSpawnTask extends Task {
         const x = Math.random() * xRange + 7 + config.leftUiBarWidth;
         const y = Math.random() * yRange + 7;
 
-        const tableRoll = Math.random() * 5;
+        const tableRoll = Math.random() * 2;
         const itemTable = tableRoll <= 1 ? rareItemSpawns : itemSpawns;
 
         const itemRoll = Math.floor(Math.random() * itemTable.length);

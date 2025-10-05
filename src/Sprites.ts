@@ -19,6 +19,7 @@ export class Sprites {
     public static readonly background = loadImage('motherboard.png');
     
     public static readonly itemPlusIcon = loadImage('plus.png');
+    public static readonly itemUpgradeIcon = loadImage('item_upgrade_icon.png');
     public static readonly restartIcon = loadImage('restart.png');
 }
 

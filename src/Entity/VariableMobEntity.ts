@@ -19,6 +19,7 @@ export abstract class VariableMobEntity extends MobEntity {
         this.speed = options.speed;
         this.maxHealth = options.health;
         this.health = options.health;
+        this.renderOrder = 1;
     }
 
     public getSprite(): Sprite {
@@ -37,9 +38,18 @@ export abstract class VariableMobEntity extends MobEntity {
         }
     }
 
+    public setHealthModifier(modifier: number) {
+        this.maxHealth *= modifier;
+        this.health = this.maxHealth;
+    }
+
+    public setSpeedModifier(modifier: number) {
+        this.speed *= modifier;
+    }
+
     public override render(screen: IScreen): void {
         screen.renderRectangle(this.x, this.y, this.getSprite().width, this.getSprite().height, { color: '#f8f8f8', alpha: 0.6 });
-        screen.renderText(this.options.name, this.x + 2, this.y + (this.getSprite().height / 2) + 1, { fontColor: '#122285', fontSize: 5 })
+        screen.renderText(this.options.name, this.x + 2, this.y + (this.getSprite().height / 2) + 1, { fontColor: '#122285', fontSize: 4, fontWeight: 600 })
 
         const healthSize = (this.healthBarWidth / this.maxHealth) * this.health;
         screen.renderRectangle(this.x + (this.getSprite().width / 2) - (this.healthBarWidth / 2), this.y - 3, this.healthBarWidth, 1, { color: 'red' });

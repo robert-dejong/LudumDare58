@@ -55,10 +55,10 @@ export class RenderLevelActionHandler implements IActionHandler<RenderLevelActio
     }
 
     private renderEntities(): void {
-        const entities = this.level.getEntities();
+        const entities = this.level.getEntities().sort((a, b) => a.renderOrder - b.renderOrder);
 
         for(const entity of entities) {
-            entity.render(this.screen)
+            entity.render(this.screen);
         }
     }
 }

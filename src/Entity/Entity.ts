@@ -7,6 +7,7 @@ export abstract class Entity {
     public x: number;
     public y: number;
     public removed: boolean;
+    public renderOrder = 0;
 
     private actionExecutor: IActionExecutor;
 

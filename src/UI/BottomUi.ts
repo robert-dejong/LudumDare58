@@ -6,6 +6,7 @@ import { Maths } from "../../libs/Core/Util/Maths";
 import { BuyPlaceableAction } from "../Actions/Upgrades/BuyPlaceableUpgrade";
 import { config } from "../Config";
 import { PlayerStats } from "../Entity/Player/PlayerStats";
+import { Main } from "../Main";
 import { Upgrade } from "../Upgrades/Upgrade";
 import { Upgrades } from "../Upgrades/Upgrades";
 
@@ -41,15 +42,16 @@ export class BottomUi extends UI {
         const healthWidth = (70 / this.playerStats.getMaxHealth()) * this.playerStats.getHealth();
         screen.renderRectangle(3, config.BottomUiBarHeight + 10, healthWidth, 10, { color: 'green' });
 
-        screen.renderText(`Unused memory: ${this.playerStats.getHealth()} MB`, 3, config.BottomUiBarHeight + 16.3, {...textOptions, width: 70, textCenter: true });
+        screen.renderText(`Unused memory: ${this.playerStats.getHealth()} MB`, 3, config.BottomUiBarHeight + 16.3, {...textOptions, width: 70, textAlign: 'center' });
 
         // Score
         screen.renderText(`MB's cleaned: ${this.playerStats.getScore()}`, 2, config.BottomUiBarHeight + 5, textOptions);
+        screen.renderText(`Points: ${this.playerStats.getPoints()}`, 40, config.BottomUiBarHeight + 5, { ...textOptions, width: 33.5, textAlign: 'right' });
         
         // Labels
         const buyablesWidth = this.upgradeOffsetX * this.buyableUpgrades.length;
-        screen.renderText('Upgrades', 79, config.BottomUiBarHeight + 5, {...textOptions, width: buyablesWidth, textCenter: true });
-        screen.renderText('Workers', 79 + buyablesWidth + this.placeableUpgradeOffsetX, config.BottomUiBarHeight + 5, {...textOptions, width: this.upgradeOffsetX * this.placeableUpgrades.length, textCenter: true });
+        screen.renderText('Upgrades', 79, config.BottomUiBarHeight + 5, {...textOptions, width: buyablesWidth, textAlign: 'center' });
+        screen.renderText('Workers', 79 + buyablesWidth + this.placeableUpgradeOffsetX, config.BottomUiBarHeight + 5, {...textOptions, width: this.upgradeOffsetX * this.placeableUpgrades.length, textAlign: 'center' });
 
         // Dividers
         screen.renderLine(76, config.BottomUiBarHeight, 76, height, 0.5, '#ffffff');
@@ -87,6 +89,11 @@ export class BottomUi extends UI {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public override click(x: number, y: number): void {
+        if (Main.paused || this.playerStats.isDied()) {
+            this.clear();
+            return;
+        }
+
         if (this.draggingUpgrade) {
             const buyPlaceableAction = new BuyPlaceableAction(this.draggingUpgrade, this.mouseX, this.mouseY);
             this.actionExecutor.execute(buyPlaceableAction);
@@ -112,6 +119,11 @@ export class BottomUi extends UI {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public override hover(x: number, y: number): void {
+        if (Main.paused || this.playerStats.isDied()) {
+            this.clear();
+            return;
+        }
+
         this.selectedUpgrade = undefined;
 
         if (this.draggingUpgrade) return;
@@ -129,6 +141,11 @@ export class BottomUi extends UI {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public override drag(x: number, y: number): void {
+        if (Main.paused || this.playerStats.isDied()) {
+            this.clear();
+            return;
+        }
+
         if (!this.selectedUpgrade) return;
         
         const upgradePosition = this.getBaseUpgradePosition();
@@ -138,7 +155,9 @@ export class BottomUi extends UI {
 
             if (this.selectedUpgrade && upgrade.upgradeType === this.selectedUpgrade.upgradeType && !Maths.intersects(upgradePosition.x + xOffset, upgradePosition.y - config.BottomUiBarHeight, upgradePosition.width, upgradePosition.height, x, y, 1, 1)) {
                 if (this.selectedUpgrade.isPlaceable) {
-                    this.draggingUpgrade = this.selectedUpgrade;
+                    if (this.playerStats.canBuyUpgrade(this.selectedUpgrade)) {
+                        this.draggingUpgrade = this.selectedUpgrade;
+                    }
                 }
                 this.selectedUpgrade = undefined;
             }
@@ -154,5 +173,10 @@ export class BottomUi extends UI {
     }
 
     public override tick(): void {
+    }
+
+    public clear(): void {
+        this.selectedUpgrade = undefined;
+        this.draggingUpgrade = undefined;
     }
 }

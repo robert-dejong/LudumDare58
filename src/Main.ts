@@ -31,12 +31,13 @@ import { PlayerActions } from './Entity/Player/PlayerActions';
 import { UseBroomAction, UseBroomActionHandler } from './Actions/Player/UseBroomAction';
 import { ItemSpawnTask } from './Tasks/ItemSpawnTask';
 import { ClearLevelAction, ClearLevelActionHandler } from './Actions/Level/ClearLevel';
+import { RenderTextOptions } from '../libs/Core/Screen/RenderTextOptions';
 
 globalThis.settings = settings;
 
 export class Main {
     private readonly screen: IScreen;
-    private readonly level: ILevel;
+    private level: ILevel;
     private readonly playerActions: PlayerActions;
     private readonly playerStats: PlayerStats;
     private readonly taskManager: ITaskManager;
@@ -49,6 +50,8 @@ export class Main {
     private frames = 0;
     private last = new Date().getTime();
     private ticks = 0;
+
+    public static paused = false;
     
     constructor() {
         this.actionExecutor = createActionExecutor();
@@ -64,10 +67,6 @@ export class Main {
 
         this.initialize();
 
-        this.level = this.actionExecutor.execute<ILevel>(new GenerateLevelAction(128, 128));
-        this.taskManager.add(new EnemyWaveTask(this.level, this.playerStats));
-        this.taskManager.add(new ItemSpawnTask(this.level));
-
         this.screen.setSize(config.screenWidth, config.screenHeight);
 
         this.run(0);
@@ -75,13 +74,17 @@ export class Main {
 
     private initialize(): void {
         this.playerStats.initialize();
+        this.level = this.actionExecutor.execute<ILevel>(new GenerateLevelAction());
+        this.taskManager.clear();
+        this.taskManager.add(new EnemyWaveTask(this.level, this.playerStats));
+        this.taskManager.add(new ItemSpawnTask(this.level));
     }
 
     private registerActions(): void {
         this.actionExecutor.register(MoveMobEntityAction.name, () => new MoveMobEntityActionHandler(this.level));
         this.actionExecutor.register(DamageRamAction.name, () => new DamageRamActionHandler(this.playerStats));
         this.actionExecutor.register(RenderLevelAction.name, () => new RenderLevelActionHandler(this.level, this.screen));
-        this.actionExecutor.register(MouseClickAction.name, () => new MouseClickActionHandler(this.uiManager, this.playerActions));
+        this.actionExecutor.register(MouseClickAction.name, () => new MouseClickActionHandler(this.uiManager, this.playerActions, this.playerStats));
         this.actionExecutor.register(MouseMoveAction.name, () => new MouseMoveActionHandler(this.uiManager));
         this.actionExecutor.register(MouseDragAction.name, () => new MouseDragActionHandler(this.uiManager));
         this.actionExecutor.register(GenerateLevelAction.name, () => new GenerateLevelActionHandler(this.actionExecutor));
@@ -132,6 +135,21 @@ export class Main {
     private tick(): void {
         if (settings.menu() !== 'game') return;
 
+        if (keyBinds.pause.isPressed && !this.playerStats.isDied()) {
+            keyBinds.pause.release();
+            Main.paused = !Main.paused;
+        }
+
+        if (Main.paused) return;
+
+        if (this.playerStats.isDied()) {
+            if (keyBinds.restart.isPressed) {
+                keyBinds.restart.release();
+                this.initialize();
+            }
+            return;
+        }
+
         this.playerActions.tick();
         this.level.tick();
         this.taskManager.tick();
@@ -144,6 +162,20 @@ export class Main {
         this.level.render();
         this.playerActions.render(this.screen);
         this.uiManager.render(this.screen);
+
+        if (this.playerStats.isDied()) {
+            const textOptions: RenderTextOptions = { fontSize: 6, fontColor: '#ffffff', width: this.screen.getSize().width, textAlign: 'center' };
+            this.screen.renderRectangle(0, 0, this.screen.getSize().width, this.screen.getSize().height, { color: '#000000', alpha: 0.4 });
+            this.screen.renderText('Memory overload!', 0, (this.screen.getSize().height / 2) - 23, { ...textOptions, fontSize: 9 });
+            this.screen.renderText(`MB's cleaned: ${this.playerStats.getScore()}`, 0, (this.screen.getSize().height / 2) - 12, { ...textOptions });
+            this.screen.renderText('Press Space to try again', 0, (this.screen.getSize().height / 2) - 1, { ...textOptions });
+            return;
+        }
+
+        if (Main.paused) {
+            this.screen.renderRectangle(0, 0, this.screen.getSize().width, this.screen.getSize().height, { color: '#000000', alpha: 0.4 });
+            this.screen.renderText('Game paused', 0, (this.screen.getSize().height / 2) - 9, { fontSize: 9, fontColor: '#ffffff', width: this.screen.getSize().width, textAlign: 'center' });
+        }
     }
 }
 

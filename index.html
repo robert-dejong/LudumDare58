@@ -170,27 +170,14 @@
     <div id="mainMenu" class="menu" data-menu="mainmenu">
         <div class="screen">
             <div class="center">
-                <h3>Game</h3>
+                <h3>Clean That Garbage!</h3>
                 <div class="button-container">
                     <span class="button" onclick="setMenu('game')">Start game</span>
                 </div>
 
-                <div class="button-container">
-                    <span class="button" onclick="setMenu('instructions')">How to play</span>
-                </div>
-
-                <div class="button-container">
-                    <span class="button" onclick="setMenu('settings')">Settings</span>
-                </div>
-
                 <p>
-                    <strong>TIP:</strong> Turn on easy mode in the settings to get
-                    familiar with the mechanics. In easy mode there is no order time
-                    limit and you can't get fired.
-                </p>
-                <p>
-                    <strong>CONTROLS:</strong> Drag-and-drop to add/move ingredients,
-                    press ESC to pause or close dialogue.
+                    <strong>CONTROLS:</strong> Click incoming memory to clean, buy upgrades and turrets (CPU/NPU's) to help you clean up memory,
+                    press ESC to pause.
                 </p>
             </div>
         </div>
@@ -214,13 +201,6 @@
         <div class="screen">
             <div class="center">
                 <h3>Settings</h3>
-                <div class="setting">
-                    <label>Difficulty:</label>
-                    <div class="checkbox-group">
-                        <span class="checkbox" onclick="settings.setDifficulty('easy'); updateSetting(event)">Easy</span>
-                        <span class="checkbox checked" onclick="settings.setDifficulty('normal'); updateSetting(event)">Normal</span>
-                    </div>
-                </div>
 
                 <div class="setting">
                     <label>Sound:</label>

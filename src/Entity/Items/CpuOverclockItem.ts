@@ -14,4 +14,8 @@ export class CpuOverclockItem extends ItemEntity {
     public getSprite(): Sprite {
         return Sprites.overclockIcon;
     }
+
+    public getEffectSprite(): Sprite {
+        return Sprites.itemUpgradeIcon;
+    }
 }

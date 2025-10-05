@@ -4,16 +4,12 @@ import { Entity } from "../Entity/Entity";
 import { ILevel } from "./ILevel";
 
 class Level implements ILevel {
-    public readonly width: number;
-    public readonly height: number;
 
     private readonly actionExecutor: IActionExecutor;
 
     private entities: Array<Entity>;
     
-    constructor(width: number, height: number, actionExecutor: IActionExecutor) {
-        this.width = width;
-        this.height = height;
+    constructor(actionExecutor: IActionExecutor) {
         this.entities = new Array<Entity>();
         this.actionExecutor = actionExecutor;
     }
@@ -35,9 +31,9 @@ class Level implements ILevel {
         this.entities.push(entity);
     }
 
-    public getEntities(): ReadonlyArray<Entity> {
+    public getEntities(): Array<Entity> {
         return this.entities.filter(e => !e.removed);
     }
 }
 
-export const createLevel = (width: number, height: number, actionExecutor: IActionExecutor) => new Level(width, height, actionExecutor);
+export const createLevel = (actionExecutor: IActionExecutor) => new Level(actionExecutor);

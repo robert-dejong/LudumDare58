@@ -27,19 +27,17 @@ export class UseBroomActionHandler implements IActionHandler<UseBroomAction> {
         const mobEntities = this.level.getEntities().filter(this.isVariableMobEntity);
         const itemEntities = this.level.getEntities().filter(this.isItemEntity);
         const broomLevel = this.playerStats.getUpgradeLevel(UpgradeType.Broom);
-        const damage = broomLevel * config.broomDamageIncreasePerLevel;
+        const damage = config.broomBaseDamage * config.getBroomDamageModifier(broomLevel);
 
         for(const item of itemEntities) {
             if (Maths.intersects(action.x, action.y, Sprites.broom.width, Sprites.broom.height, item.x, item.y, item.getSprite().width, item.getSprite().height)) {
                 item.pickup(this.playerStats);
-                return;
             }
         }
 
         for(const entity of mobEntities) {
             if (Maths.intersects(action.x, action.y, Sprites.broom.width, Sprites.broom.height, entity.x, entity.y, entity.getSprite().width, entity.getSprite().height)) {
                 entity.dealDamage(damage);
-                return;
             }
         }
 

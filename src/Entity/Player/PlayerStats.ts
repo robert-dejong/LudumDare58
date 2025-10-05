@@ -14,7 +14,7 @@ export class PlayerStats {
         this.maxHealth = 100;
         this.health = 100;
         this.score = 0;
-        this.points = 100000; // TODO: 0
+        this.points = 0;
         this.wave = 0;
         this.upgradeLevels = {
             [UpgradeType.CpuOverclock]: 1,
@@ -28,8 +28,8 @@ export class PlayerStats {
     public dealDamage(amount: number) {
         this.health -= amount;
 
-        if (this.health <= 0) {
-            // TODO: Death
+        if (this.isDied()) {
+            // TODO: Death sound
         }
     }
 
@@ -88,10 +88,6 @@ export class PlayerStats {
         return this.upgradeLevels[upgradeType];
     }
 
-    //public get getUpgradeLevels(): ReadonlyMap<UpgradeType, number> {
-     //   return this.upgradeLevels;
-    //}
-
     public addScore(score: number) {
         this.score += score;
     }
@@ -118,5 +114,9 @@ export class PlayerStats {
 
     public getWave(): number {
         return this.wave;
+    }
+
+    public isDied(): boolean {
+        return this.getHealth() <= 0;
     }
 }

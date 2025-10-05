@@ -15,4 +15,8 @@ export class RestartItem extends ItemEntity {
     public getSprite(): Sprite {
         return Sprites.restartIcon;
     }
+
+    public getEffectSprite(): Sprite {
+        return Sprites.itemPlusIcon;
+    }
 }

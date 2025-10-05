@@ -4,7 +4,7 @@ import { WorkerEntity } from "../WorkerEntity";
 
 export class NpuCoreMobEntity extends WorkerEntity {
     constructor(x: number, y: number) {
-        super(x, y, 'npu', 400);
+        super(x, y, 'npu', 300);
     }
 
     public override getSprite(): Sprite {

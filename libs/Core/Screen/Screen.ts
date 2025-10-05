@@ -35,7 +35,6 @@ class Screen implements IScreen {
 
         this.width = this.canvas.width / this.scale;
         this.height = this.canvas.height / this.scale;
-        console.log(`Width: ${window.innerWidth}, Height: ${window.innerHeight}`);
     }
 
     public renderText(text: string, x: number, y: number, options: RenderTextOptions = new RenderTextOptions()): void {
@@ -43,9 +42,16 @@ class Screen implements IScreen {
         this.context.fillStyle = options.fontColor;
         this.context.font = `${options.fontWeight} ${options.fontSize}px Arial`;
         
-        if (options.width && options.textCenter) {
+        if (options.width && options.textAlign === 'center') {
             const textWidth = this.context.measureText(text).width;
             this.context.fillText(text, x + (options.width - textWidth) / 2, y);
+            return;
+        }
+        
+        if (options.width && options.textAlign === 'right') {
+            this.context.textAlign = 'right';
+            this.context.fillText(text, x + options.width, y);
+            this.context.textAlign = 'left';
             return;
         }
 

@@ -37,6 +37,10 @@ class TaskManager implements ITaskManager {
 	public reset() {
 		this.tasks.forEach((task) => task.reset());
 	}
+
+	public clear() {
+		this.tasks = new Array<Task>();
+	}
 }
 
 export const createTaskManager = () => new TaskManager();
