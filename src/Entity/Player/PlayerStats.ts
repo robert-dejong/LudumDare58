@@ -18,8 +18,9 @@ export class PlayerStats {
         this.wave = 0;
         this.upgradeLevels = {
             [UpgradeType.CpuOverclock]: 1,
-            [UpgradeType.CpuThread]: 1,
             [UpgradeType.Ram]: 1,
+            [UpgradeType.Broom]: 1,
+            [UpgradeType.CpuThread]: 1,
             [UpgradeType.NpuCore]: 1,
         };
     }

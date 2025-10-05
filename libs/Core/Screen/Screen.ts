@@ -102,6 +102,10 @@ class Screen implements IScreen {
         this.context.stroke();
     }
 
+    public setCursorVisibility(visible: boolean) {
+        this.canvas.style.cursor = visible ? 'auto' : 'none';
+    }
+
     private shouldRender(absoluteX: number, absoluteY: number, renderWidth: number, renderHeight: number): boolean {
         if(absoluteX > this.width) return false;
         if(absoluteY > this.height) return false;

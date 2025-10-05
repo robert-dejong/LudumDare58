@@ -1,3 +1,5 @@
+import { Mouse } from "./Mouse";
+
 export class MouseHandler {
     private constructor() { }
 
@@ -10,6 +12,8 @@ export class MouseHandler {
         }
         
         const event = (e: MouseEvent) => {
+            Mouse.x = e.offsetX;
+            Mouse.y = e.offsetY;
             if (type === 'mousemove' && this.isPressed) return;
             action(e.offsetX, e.offsetY);
         };

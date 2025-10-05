@@ -21,8 +21,6 @@ export class RenderLevelActionHandler implements IActionHandler<RenderLevelActio
         this.renderLeftUiBar();
         this.renderEntities();
 
-        this.screen.renderText('This is a test text! really really really really long', 100, 100);
-
         return Unit.value;
     }
 

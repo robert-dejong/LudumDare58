@@ -9,4 +9,5 @@ export interface IScreen {
     renderText(text: string, x: number, y: number, options?: RenderTextOptions): void;
     renderRectangle(x: number, y: number, width: number, height: number, options?: RenderRectangleOptions): void;
     renderLine(x: number, y: number, width: number, height: number, brushSize: number, color: string): void;
+    setCursorVisibility(visible: boolean): void;
 }

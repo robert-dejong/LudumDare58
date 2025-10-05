@@ -2,7 +2,6 @@ import { IScreen } from '../libs/Core/Screen/IScreen';
 import { KeyHandler } from '../libs/Core/Input/KeyHandler';
 import { createScreen2D } from '../libs/Core/Screen/Screen';
 import { config } from './Config';
-import { Player } from './Entity/Player/Player';
 import { keyBinds } from './Keybinds';
 import { ILevel } from './Level/ILevel';
 import { settings } from '../libs/Core/Settings/Settings';
@@ -28,13 +27,15 @@ import { BuyPlaceableAction, BuyPlaceableActionHandler } from './Actions/Upgrade
 import { WorkerFireProjectileAction, WorkerFireProjectileActionHandler } from './Actions/Entity/WorkerFireProjectile';
 import { IncreasePointsAction, IncreasePointsActionHandler } from './Actions/Entity/IncreasePoints';
 import { IncreaseScoreAction, IncreaseScoreActionHandler } from './Actions/Entity/IncreaseScoreAction';
+import { PlayerActions } from './Entity/Player/PlayerActions';
+import { UseBroomAction, UseBroomActionHandler } from './Actions/Player/UseBroomAction';
 
 globalThis.settings = settings;
 
 export class Main {
     private readonly screen: IScreen;
     private readonly level: ILevel;
-    private readonly player: Player;
+    private readonly playerActions: PlayerActions;
     private readonly playerStats: PlayerStats;
     private readonly taskManager: ITaskManager;
     private readonly actionExecutor: IActionExecutor;
@@ -49,8 +50,8 @@ export class Main {
     
     constructor() {
         this.actionExecutor = createActionExecutor();
-        this.player = new Player();
         this.playerStats = new PlayerStats();
+        this.playerActions = new PlayerActions(this.actionExecutor);
         this.screen = createScreen2D(config.renderScale);
         this.taskManager = createTaskManager();
         this.uiManager = createUIManager();
@@ -62,7 +63,6 @@ export class Main {
         this.initialize();
 
         this.level = this.actionExecutor.execute<ILevel>(new GenerateLevelAction(128, 128));
-
         this.taskManager.add(new EnemyWaveTask(this.level, this.playerStats));
 
         this.screen.setSize(config.screenWidth, config.screenHeight);
@@ -78,14 +78,15 @@ export class Main {
         this.actionExecutor.register(MoveMobEntityAction.name, () => new MoveMobEntityActionHandler(this.level));
         this.actionExecutor.register(DamageRamAction.name, () => new DamageRamActionHandler(this.playerStats));
         this.actionExecutor.register(RenderLevelAction.name, () => new RenderLevelActionHandler(this.level, this.screen));
-        this.actionExecutor.register(MouseClickAction.name, () => new MouseClickActionHandler(this.uiManager));
+        this.actionExecutor.register(MouseClickAction.name, () => new MouseClickActionHandler(this.uiManager, this.playerActions));
         this.actionExecutor.register(MouseMoveAction.name, () => new MouseMoveActionHandler(this.uiManager));
         this.actionExecutor.register(MouseDragAction.name, () => new MouseDragActionHandler(this.uiManager));
-        this.actionExecutor.register(GenerateLevelAction.name, () => new GenerateLevelActionHandler(this.actionExecutor, this.player));
+        this.actionExecutor.register(GenerateLevelAction.name, () => new GenerateLevelActionHandler(this.actionExecutor));
         this.actionExecutor.register(BuyPlaceableAction.name, () => new BuyPlaceableActionHandler(this.playerStats, this.level, this.screen));
         this.actionExecutor.register(WorkerFireProjectileAction.name, () => new WorkerFireProjectileActionHandler(this.level, this.playerStats));
         this.actionExecutor.register(IncreasePointsAction.name, () => new IncreasePointsActionHandler(this.playerStats));
         this.actionExecutor.register(IncreaseScoreAction.name, () => new IncreaseScoreActionHandler(this.playerStats));
+        this.actionExecutor.register(UseBroomAction.name, () => new UseBroomActionHandler(this.level, this.playerStats));
     }
 
     private addInputListeners(): void {
@@ -127,6 +128,7 @@ export class Main {
     private tick(): void {
         if (settings.menu() !== 'game') return;
 
+        this.playerActions.tick();
         this.level.tick();
         this.taskManager.tick();
         this.uiManager.tick();
@@ -136,6 +138,7 @@ export class Main {
         if (settings.menu() !== 'game') return;
         
         this.level.render();
+        this.playerActions.render(this.screen);
         this.uiManager.render(this.screen);
     }
 }

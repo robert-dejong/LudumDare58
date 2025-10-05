@@ -58,7 +58,7 @@ export class BottomUi extends UI {
         // Upgrades
         Upgrades.getUpgrades().forEach((upgrade, index) => {
             const xOffset = (this.upgradeOffsetX * index) + (upgrade.isPlaceable ? this.placeableUpgradeOffsetX : 0);
-            screen.renderRectangle(79 + xOffset, config.BottomUiBarHeight + 8, 15, 15, { color: '#ffffff', filled: false });
+            screen.renderRectangle(79 + xOffset, config.BottomUiBarHeight + 8, 15, 15, { color: '#353535', filled: true });
             screen.render(upgrade.icon, 81 + xOffset, config.BottomUiBarHeight + 10);
         });
 
