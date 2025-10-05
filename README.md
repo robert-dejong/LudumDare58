@@ -1,5 +1,7 @@
 # Ludum Dare 58 - Clean That Garbage!
 
+Link to entry: [Ludum Dare 58 - Clean That Garbage!](https://ldjam.com/events/ludum-dare/58/clean-that-garbage)
+
 After a decade of spaghetti code being pushed to main you were assigned to fix the memory situation. It is your job to upgrade the server specs as well to manually fix the memory issues.
 
 Controls:
