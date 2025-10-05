@@ -60,8 +60,6 @@ export class WorkerFireProjectileActionHandler implements IActionHandler<WorkerF
         }
         
         action.worker.timeSinceLastAttack = 0;
-
-        console.log('Shooting at target at', target.x, target.y);
     }
 
     private findNearestEntity(worker: WorkerEntity): VariableMobEntity {

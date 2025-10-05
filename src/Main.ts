@@ -29,6 +29,8 @@ import { IncreasePointsAction, IncreasePointsActionHandler } from './Actions/Ent
 import { IncreaseScoreAction, IncreaseScoreActionHandler } from './Actions/Entity/IncreaseScoreAction';
 import { PlayerActions } from './Entity/Player/PlayerActions';
 import { UseBroomAction, UseBroomActionHandler } from './Actions/Player/UseBroomAction';
+import { ItemSpawnTask } from './Tasks/ItemSpawnTask';
+import { ClearLevelAction, ClearLevelActionHandler } from './Actions/Level/ClearLevel';
 
 globalThis.settings = settings;
 
@@ -64,6 +66,7 @@ export class Main {
 
         this.level = this.actionExecutor.execute<ILevel>(new GenerateLevelAction(128, 128));
         this.taskManager.add(new EnemyWaveTask(this.level, this.playerStats));
+        this.taskManager.add(new ItemSpawnTask(this.level));
 
         this.screen.setSize(config.screenWidth, config.screenHeight);
 
@@ -87,6 +90,7 @@ export class Main {
         this.actionExecutor.register(IncreasePointsAction.name, () => new IncreasePointsActionHandler(this.playerStats));
         this.actionExecutor.register(IncreaseScoreAction.name, () => new IncreaseScoreActionHandler(this.playerStats));
         this.actionExecutor.register(UseBroomAction.name, () => new UseBroomActionHandler(this.level, this.playerStats));
+        this.actionExecutor.register(ClearLevelAction.name, () => new ClearLevelActionHandler(this.level));
     }
 
     private addInputListeners(): void {

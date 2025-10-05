@@ -16,8 +16,11 @@ export class RenderLevelActionHandler implements IActionHandler<RenderLevelActio
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public handle(_action: RenderLevelAction): Unit {
-        const { width, height } = this.screen.getSize();
-        this.screen.renderRectangle(0, 0, width, height, { color: '#37946e' });
+        this.screen.render(Sprites.background, 0, 0);
+        //const { width, height } = this.screen.getSize();
+        //this.screen.renderRectangle(0, 0, width, height, { color: '#162d19' });
+        //this.screen.renderLine(0, 30, 30, 0, 1, '#224b15');
+        //this.screen.renderLine(0, 35, 35, 0, 1, '#224b15');
         this.renderLeftUiBar();
         this.renderEntities();
 

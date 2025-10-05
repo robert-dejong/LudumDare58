@@ -1,17 +1,23 @@
-import { Sprite } from "../../libs/Core/Screen/Sprite";
-import { Item } from "../Item/Item";
+import { IScreen } from "../../libs/Core/Screen/IScreen";
+import { Sprites } from "../Sprites";
 import { Entity } from "./Entity";
+import { PlayerStats } from "./Player/PlayerStats";
 
-export class ItemEntity extends Entity {
-    public readonly item: Item;
+type FloatingDirection = 'up' | 'down';
 
-    constructor(item: Item, x: number, y: number) {
+const despawnRateInTicks = 600;
+const floatingDirectionTicks = 55;
+
+export abstract class ItemEntity extends Entity {
+    private ticksTillDespawn = despawnRateInTicks;
+
+    private floatingDirection: FloatingDirection = 'up';
+    private floatingOffsetTicks: number = 0;
+
+    public abstract pickup(playerStats: PlayerStats): void;
+
+    constructor(x: number, y: number) {
         super(x, y);
-        this.item = item;
-    }
-
-    public override getSprite(): Sprite {
-        return this.item.sprite;
     }
 
     public override canPass(): boolean {
@@ -20,10 +26,32 @@ export class ItemEntity extends Entity {
 
     public override tick(): void {
         super.tick();
+        
+        if (this.floatingDirection === 'up') {
+            this.floatingOffsetTicks++;
+        }
+
+        if (this.floatingDirection === 'down') {
+            this.floatingOffsetTicks--;
+        }
+
+        if (this.floatingOffsetTicks === floatingDirectionTicks) {
+            this.floatingDirection = 'down';
+        } else if(this.floatingOffsetTicks === 0) {
+            this.floatingDirection = 'up';
+        }
+
+        this.ticksTillDespawn--;
+
+        if (this.ticksTillDespawn === 0) {
+            this.removed = true;
+        }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public override onCollide(entity: Entity): void {
+    public override render(screen: IScreen) {
+        const offsetY = -(this.floatingOffsetTicks * 0.07);
+        screen.render(this.getSprite(), this.x, this.y + offsetY);
 
+        screen.render(Sprites.itemPlusIcon, this.x + this.getSprite().width, this.y + offsetY);
     }
 }

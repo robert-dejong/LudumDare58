@@ -27,10 +27,18 @@ export class PlayerStats {
 
     public dealDamage(amount: number) {
         this.health -= amount;
+
+        if (this.health <= 0) {
+            // TODO: Death
+        }
     }
 
-    public addHealh(amount: number) {
+    public addHealth(amount: number) {
         this.health += amount;
+
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth;
+        }
     }
 
     public getHealth(): number {
@@ -59,14 +67,21 @@ export class PlayerStats {
         const cost = upgrade.cost(level);
         
         this.removePoints(cost);
-        this.upgradeLevels[upgrade.upgradeType] = level + 1;
+        this.giveUpgrade(upgrade);
+
         // TODO: Upgrades - play sound to let player know
+        return true;
+    }
+
+    public giveUpgrade(upgrade: Upgrade): void {
+        const level = this.upgradeLevels[upgrade.upgradeType];
+
+        this.upgradeLevels[upgrade.upgradeType] = level + 1;
 
         if (upgrade.upgradeType === UpgradeType.Ram) {
             this.maxHealth += config.memoryIncreasePerLevel;
             this.health += config.memoryIncreasePerLevel;
         }
-        return true;
     }
 
     public getUpgradeLevel(upgradeType: UpgradeType): number {
